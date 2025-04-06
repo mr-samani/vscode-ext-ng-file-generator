@@ -7,6 +7,9 @@
   "engines": {
     "vscode": "^1.50.0"
   },
+  "repository": {
+    "url": "https://github.com/mr-samani/vscode-ext-ng-file-generator.git"
+  },
   "categories": [
     "Other"
   ],
