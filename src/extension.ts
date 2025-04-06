@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { createComponent } from "./commands/create-components";
 import { capitalize } from "./utils/string";
+import { createService } from "./commands/create-service";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -26,15 +27,21 @@ export function activate(context: vscode.ExtensionContext) {
       "samaniGenerator.createService",
       async (uri: vscode.Uri) => {
         const serviceName = await vscode.window.showInputBox({
-          prompt: "نام سرویس را وارد کنید",
+          prompt: "Enter your service name:",
         });
         if (serviceName) {
           const createFolder = await vscode.window.showQuickPick(
             ["yes", "no"],
-            { placeHolder: "آیا پوشه‌ای برای سرویس ایجاد شود؟" }
+            { placeHolder: "Should a folder be created for the service?" }
           );
           const inFolder = createFolder === "yes";
-          createService(uri.fsPath, serviceName, inFolder);
+
+          const injectableInModule = await vscode.window.showQuickPick(
+            ["yes", "no"],
+            { placeHolder: "Injectable provide in root?" }
+          );
+          const inRootInjectable = injectableInModule === "yes";
+          createService(uri.fsPath, serviceName, inFolder, inRootInjectable);
         }
       }
     ),
@@ -51,28 +58,6 @@ export function activate(context: vscode.ExtensionContext) {
       }
     )
   );
-}
-
-
-function createService(basePath: string, name: string, inFolder: boolean) {
-  const serviceDir = inFolder ? path.join(basePath, name) : basePath;
-  if (inFolder) {
-    fs.mkdirSync(serviceDir);
-  }
-
-  const serviceTs = `import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root',
-})
-export class ${capitalize(name)}Service {
-  constructor() { }
-}
-`;
-
-  fs.writeFileSync(path.join(serviceDir, `${name}.service.ts`), serviceTs);
-
-  vscode.window.showInformationMessage(`سرویس ${name} ایجاد شد.`);
 }
 
 function createModule(basePath: string, name: string) {
@@ -117,7 +102,5 @@ export class ${capitalize(name)}RoutingModule { }
     `ماژول ${name} با فایل روتینگ ایجاد شد.`
   );
 }
-
-
 
 export function deactivate() {}

@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { capitalize, toPascalCase } from "../utils/string";
+import { toPascalCase } from "../utils/string";
 import { getSafeBaseDir } from "../utils/path.helper";
+import { addToNearestModule } from "../utils/add-to-module";
 
 export function createComponent(
   basePath: string,
@@ -63,74 +64,5 @@ export class ${componentName}Component extends AppBaseComponent implements OnIni
     componentScss
   );
 
-  vscode.window.showInformationMessage(`Component ${componentName} Created.`);
-}
-
-/**
- * add component to nearest module
- * - if standalone is false
- * @param componentName
- * @param componentClassName
- * @param componentPath
- * @returns
- */
-function addToNearestModule(
-  componentName: string,
-  componentClassName: string,
-  componentPath: string
-) {
-  let dir = path.dirname(componentPath);
-
-  while (dir !== path.parse(dir).root) {
-    const files = fs.readdirSync(dir);
-    const moduleFile = files.find((f) => f.endsWith(".module.ts"));
-    if (moduleFile) {
-      const modulePath = path.join(dir, moduleFile);
-      let content = fs.readFileSync(modulePath, "utf8");
-
-      // اگه import نشده باشه، اضافه کن
-      const relativeImport = path
-        .relative(dir, componentPath)
-        .replace(/\\/g, "/")
-        .replace(/\.ts$/, "");
-      const importLine = `import { ${componentClassName} } from './${relativeImport}';`;
-
-      if (!content.includes(importLine)) {
-        content = importLine + "\n" + content;
-      }
-
-      // اگر declarations وجود نداره، اضافه‌اش کن
-      if (!/declarations\s*:\s*\[/.test(content)) {
-        content = content.replace(
-          /@NgModule\s*\(\s*{/,
-          (match) => `${match}\n  declarations: [${componentClassName}],`
-        );
-      } else {
-        // اگر داخل declarations نیست، اضافه‌اش کن
-        content = content.replace(
-          /declarations\s*:\s*\[([^\]]*)\]/,
-          (match, declarations) => {
-            const parts = declarations
-              .split(",")
-              .map((d: string) => d.trim())
-              .filter(Boolean);
-            if (!parts.includes(componentClassName)) {
-              parts.push(componentClassName);
-            }
-            return `declarations: [${parts.join(", ")}]`;
-          }
-        );
-      }
-
-      fs.writeFileSync(modulePath, content, "utf8");
-      console.log(
-        `✅ "${componentClassName}" added to module "${moduleFile}".`
-      );
-      return;
-    }
-
-    dir = path.dirname(dir); // حرکت به بالا
-  }
-
-  console.warn("⚠️ module.ts not found!");
+  vscode.window.showInformationMessage(`✅ Component ${componentName} Created.`);
 }
