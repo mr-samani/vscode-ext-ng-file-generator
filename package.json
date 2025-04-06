@@ -1,10 +1,11 @@
 {
-  "name": "ng-custom-generator",
-  "displayName": "ng-custom-generator",
+  "name": "ng-file-generator",
+  "displayName": "ng-file-generator",
   "description": "generate module,component,service,pipe,... by extends base components",
   "version": "0.0.1",
+  "publisher": "mr-samani",
   "engines": {
-    "vscode": "^1.99.0"
+    "vscode": "^1.50.0"
   },
   "categories": [
     "Other"
@@ -64,7 +65,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.99.0",
+    "@types/vscode": "^1.50.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@typescript-eslint/eslint-plugin": "^8.28.0",

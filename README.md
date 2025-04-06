@@ -1,71 +1,54 @@
-# ng-custom-generator README
+# ng-file-generator
 
-This is the README for your extension "ng-custom-generator". After writing up a brief description, we recommend including the following sections.
+**ng-file-generator** is a Visual Studio Code extension that helps Angular developers to quickly generate modules, components, services, pipes, and more by extending base components. It automates the creation of essential Angular files, making development faster and more efficient.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Generate Components**: Easily create Angular components with your predefined template.
+- **Generate Services**: Generate Angular services with essential structure.
+- **Generate Modules**: Automatically generate Angular modules, including routing support.
+- **Extends Base Components**: Customizes generated files with base components for consistency.
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Clone the repository or download the extension.
+2. Open VS Code and go to the **Extensions** view (`Ctrl+Shift+X`).
+3. Search for `ng-file-generator` or use the `Install from VSIX` option if the extension is not published yet.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Usage
 
-## Requirements
+Once installed, right-click in your **Explorer** view or use the command palette (`Ctrl+Shift+P`), and you will see the following options under the **Samani file generator** submenu:
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- **> Generate component**: Creates an Angular component with your specified template.
+- **> Generate Service**: Generates an Angular service with base structure.
+- **> Generate Module**: Automatically generates an Angular module with routing included.
 
-## Extension Settings
+### Commands
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+- `samaniGenerator.createComponent`: Generate a component.
+- `samaniGenerator.createService`: Generate a service.
+- `samaniGenerator.createModule`: Generate a module.
 
-For example:
+### Menu Structure
 
-This extension contributes the following settings:
+You can access these generation options by right-clicking in the **Explorer** view, where you will see the submenu:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- **Samani file generator**:
+  - **> Generate component**
+  - **> Generate Service**
+  - **> Generate Module**
 
-## Known Issues
+## Development
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+### Prerequisites
 
-## Release Notes
+- Node.js (v14 or higher)
+- Yarn (recommended for package management)
+- VS Code (v1.50.0 or higher)
 
-Users appreciate release notes as you update your extension.
+### Installation
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/mr-samani/vscode-ext-ng-file-generator.git
+   cd ng-file-generator
