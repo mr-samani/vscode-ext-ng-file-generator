@@ -14,8 +14,41 @@
   "contributes": {
     "commands": [
       {
-        "command": "ng-custom-generator.helloWorld",
-        "title": "Hello World"
+        "command": "samaniGenerator.createComponent",
+        "title": "> Generate component"
+      },
+      {
+        "command": "samaniGenerator.createService",
+        "title": "> Generate Service"
+      },
+      {
+        "command": "samaniGenerator.createModule",
+        "title": "> Generate Module with routing"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "samaniGenerator.submenu",
+          "group": "navigation"
+        }
+      ],
+      "samaniGenerator.submenu": [
+        {
+          "command": "samaniGenerator.createComponent"
+        },
+        {
+          "command": "samaniGenerator.createService"
+        },
+        {
+          "command": "samaniGenerator.createModule"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "samaniGenerator.submenu",
+        "label": "Samani file generator"
       }
     ]
   },

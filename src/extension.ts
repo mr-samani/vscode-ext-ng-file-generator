@@ -1,26 +1,123 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
+import { createComponent } from "./commands/create-components";
+import { capitalize } from "./utils/string";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "samaniGenerator.createComponent",
+      async (uri: vscode.Uri) => {
+        const componentName = await vscode.window.showInputBox({
+          prompt: "Enter your component name:",
+        });
+        if (componentName) {
+          const standalone = await vscode.window.showQuickPick(["yes", "no"], {
+            placeHolder: "standalone?(default: no)",
+          });
+          const isStandalone = standalone === "yes";
+          createComponent(uri.fsPath, componentName, isStandalone);
+        }
+      }
+    ),
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "ng-custom-generator" is now active!');
+    vscode.commands.registerCommand(
+      "samaniGenerator.createService",
+      async (uri: vscode.Uri) => {
+        const serviceName = await vscode.window.showInputBox({
+          prompt: "نام سرویس را وارد کنید",
+        });
+        if (serviceName) {
+          const createFolder = await vscode.window.showQuickPick(
+            ["yes", "no"],
+            { placeHolder: "آیا پوشه‌ای برای سرویس ایجاد شود؟" }
+          );
+          const inFolder = createFolder === "yes";
+          createService(uri.fsPath, serviceName, inFolder);
+        }
+      }
+    ),
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('ng-custom-generator.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from ng-custom-generator!');
-	});
-
-	context.subscriptions.push(disposable);
+    vscode.commands.registerCommand(
+      "samaniGenerator.createModule",
+      async (uri: vscode.Uri) => {
+        const moduleName = await vscode.window.showInputBox({
+          prompt: "نام ماژول را وارد کنید",
+        });
+        if (moduleName) {
+          createModule(uri.fsPath, moduleName);
+        }
+      }
+    )
+  );
 }
 
-// This method is called when your extension is deactivated
+
+function createService(basePath: string, name: string, inFolder: boolean) {
+  const serviceDir = inFolder ? path.join(basePath, name) : basePath;
+  if (inFolder) {
+    fs.mkdirSync(serviceDir);
+  }
+
+  const serviceTs = `import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ${capitalize(name)}Service {
+  constructor() { }
+}
+`;
+
+  fs.writeFileSync(path.join(serviceDir, `${name}.service.ts`), serviceTs);
+
+  vscode.window.showInformationMessage(`سرویس ${name} ایجاد شد.`);
+}
+
+function createModule(basePath: string, name: string) {
+  const moduleDir = path.join(basePath, name);
+  fs.mkdirSync(moduleDir);
+
+  const moduleTs = `import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [];
+
+@NgModule({
+  declarations: [],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes)
+  ]
+})
+export class ${capitalize(name)}Module { }
+`;
+
+  const routingTs = `import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class ${capitalize(name)}RoutingModule { }
+`;
+
+  fs.writeFileSync(path.join(moduleDir, `${name}.module.ts`), moduleTs);
+  fs.writeFileSync(
+    path.join(moduleDir, `${name}-routing.module.ts`),
+    routingTs
+  );
+
+  vscode.window.showInformationMessage(
+    `ماژول ${name} با فایل روتینگ ایجاد شد.`
+  );
+}
+
+
+
 export function deactivate() {}
