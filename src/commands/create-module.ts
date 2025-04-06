@@ -11,7 +11,7 @@ export function createModule(
   routingFile: boolean
 ) {
   const moduleDir = path.join(getSafeBaseDir(basePath), name);
-  fs.mkdirSync(moduleDir);
+  fs.mkdirSync(moduleDir, { recursive: true });
 
   const moduleName = toPascalCase(name);
   if (validateName(moduleName) === false) {

@@ -29,7 +29,7 @@ export function createService(
   }
 
   if (inFolder) {
-    fs.mkdirSync(serviceDir);
+    fs.mkdirSync(serviceDir, { recursive: true });
   }
 
   const serviceTs = `import { Injectable } from '@angular/core';

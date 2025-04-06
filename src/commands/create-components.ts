@@ -12,7 +12,7 @@ export function createComponent(
   standalone: boolean
 ) {
   const componentDir = path.join(getSafeBaseDir(basePath), name);
-  fs.mkdirSync(componentDir);
+  fs.mkdirSync(componentDir, { recursive: true });
   const componentName = toPascalCase(name);
 
   if (validateName(componentName) === false) {
@@ -35,7 +35,7 @@ ${imports}
   templateUrl: './${name}.component.html',
   styleUrls: ['./${name}.component.scss'],
   standalone: ${standalone},
-  ${standalone ? "imports: [CommonModule]," : ""}}
+  ${standalone ? "imports: [CommonModule]," : ""}
 }) 
 export class ${componentName}Component extends AppBaseComponent implements OnInit {
   constructor(injector: Injector) {
