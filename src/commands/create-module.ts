@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { toPascalCase } from "../utils/string";
 import { getSafeBaseDir } from "../utils/path.helper";
+import { validateName } from "../utils/validate-name";
 
 export function createModule(
   basePath: string,
@@ -13,6 +14,10 @@ export function createModule(
   fs.mkdirSync(moduleDir);
 
   const moduleName = toPascalCase(name);
+  if (validateName(moduleName) === false) {
+    vscode.window.showErrorMessage(`❌ ${moduleName} is invalid.`);
+    return;
+  }
 
   let moduleTs = "";
   if (routingFile === false) {
@@ -64,5 +69,5 @@ export function createModule(
 
   fs.writeFileSync(path.join(moduleDir, `${name}.module.ts`), moduleTs);
 
-  vscode.window.showInformationMessage(`✅ Module "${name}" created.`);
+  vscode.window.showInformationMessage(`✅ Module "${moduleName}" created.`);
 }

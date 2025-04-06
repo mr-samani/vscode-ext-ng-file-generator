@@ -4,6 +4,7 @@ import * as path from "path";
 import { capitalize, toPascalCase } from "../utils/string";
 import { getSafeBaseDir } from "../utils/path.helper";
 import { addToNearestModule } from "../utils/add-to-module";
+import { validateName } from "../utils/validate-name";
 
 /**
  * generate angular service
@@ -21,6 +22,12 @@ export function createService(
   const serviceDir = inFolder
     ? path.join(getSafeBaseDir(basePath), name)
     : getSafeBaseDir(basePath);
+  const serviceName = toPascalCase(name);
+  if (validateName(serviceName) === false) {
+    vscode.window.showErrorMessage(`❌ ${serviceName} is invalid.`);
+    return;
+  }
+
   if (inFolder) {
     fs.mkdirSync(serviceDir);
   }
@@ -34,17 +41,17 @@ ${
     : `@Injectable()`
 }
 
-export class ${toPascalCase(name)}Service {
+export class ${serviceName}Service {
   constructor() { }
 }
 `;
 
   fs.writeFileSync(path.join(serviceDir, `${name}.service.ts`), serviceTs);
-  vscode.window.showInformationMessage(`✅ Service "${name}" created.`);
+  vscode.window.showInformationMessage(`✅ Service "${serviceName}" created.`);
   if (inRootInjectable === false) {
     addToNearestModule(
-      toPascalCase(name),
-      `${toPascalCase(name)}Service`,
+      serviceName,
+      `${serviceName}Service`,
       `${serviceDir}/${name}.service`,
       false
     );

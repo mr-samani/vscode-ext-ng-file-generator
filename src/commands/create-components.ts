@@ -4,6 +4,7 @@ import * as path from "path";
 import { toPascalCase } from "../utils/string";
 import { getSafeBaseDir } from "../utils/path.helper";
 import { addToNearestModule } from "../utils/add-to-module";
+import { validateName } from "../utils/validate-name";
 
 export function createComponent(
   basePath: string,
@@ -13,6 +14,11 @@ export function createComponent(
   const componentDir = path.join(getSafeBaseDir(basePath), name);
   fs.mkdirSync(componentDir);
   const componentName = toPascalCase(name);
+
+  if (validateName(componentName) === false) {
+    vscode.window.showErrorMessage(`❌ ${componentName} is invalid.`);
+    return;
+  }
 
   let imports = `
 import { Component, Injector, OnInit } from '@angular/core';
@@ -29,6 +35,7 @@ ${imports}
   templateUrl: './${name}.component.html',
   styleUrls: ['./${name}.component.scss'],
   standalone: ${standalone},
+  ${standalone ? "imports: [CommonModule]," : ""}}
 }) 
 export class ${componentName}Component extends AppBaseComponent implements OnInit {
   constructor(injector: Injector) {
@@ -64,5 +71,7 @@ export class ${componentName}Component extends AppBaseComponent implements OnIni
     componentScss
   );
 
-  vscode.window.showInformationMessage(`✅ Component ${componentName} created.`);
+  vscode.window.showInformationMessage(
+    `✅ Component "${componentName}" created.`
+  );
 }
