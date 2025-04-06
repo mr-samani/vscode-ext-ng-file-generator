@@ -23,7 +23,7 @@
       },
       {
         "command": "samaniGenerator.createModule",
-        "title": "> Generate Module with routing"
+        "title": "> Generate Module"
       }
     ],
     "menus": {

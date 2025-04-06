@@ -64,5 +64,5 @@ export class ${componentName}Component extends AppBaseComponent implements OnIni
     componentScss
   );
 
-  vscode.window.showInformationMessage(`✅ Component ${componentName} Created.`);
+  vscode.window.showInformationMessage(`✅ Component ${componentName} created.`);
 }

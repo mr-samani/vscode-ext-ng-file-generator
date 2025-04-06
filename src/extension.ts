@@ -4,6 +4,7 @@ import * as path from "path";
 import { createComponent } from "./commands/create-components";
 import { capitalize } from "./utils/string";
 import { createService } from "./commands/create-service";
+import { createModule } from "./commands/create-module";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -50,56 +51,18 @@ export function activate(context: vscode.ExtensionContext) {
       "samaniGenerator.createModule",
       async (uri: vscode.Uri) => {
         const moduleName = await vscode.window.showInputBox({
-          prompt: "نام ماژول را وارد کنید",
+          prompt: "Enter your module name:",
         });
         if (moduleName) {
-          createModule(uri.fsPath, moduleName);
+          const createRouting = await vscode.window.showQuickPick(
+            ["yes", "no"],
+            { placeHolder: "Should a routing file be created?" }
+          );
+          const routingFile = createRouting === "yes";
+          createModule(uri.fsPath, moduleName, routingFile);
         }
       }
     )
-  );
-}
-
-function createModule(basePath: string, name: string) {
-  const moduleDir = path.join(basePath, name);
-  fs.mkdirSync(moduleDir);
-
-  const moduleTs = `import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [];
-
-@NgModule({
-  declarations: [],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes)
-  ]
-})
-export class ${capitalize(name)}Module { }
-`;
-
-  const routingTs = `import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class ${capitalize(name)}RoutingModule { }
-`;
-
-  fs.writeFileSync(path.join(moduleDir, `${name}.module.ts`), moduleTs);
-  fs.writeFileSync(
-    path.join(moduleDir, `${name}-routing.module.ts`),
-    routingTs
-  );
-
-  vscode.window.showInformationMessage(
-    `ماژول ${name} با فایل روتینگ ایجاد شد.`
   );
 }
 
