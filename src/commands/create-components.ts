@@ -20,9 +20,14 @@ export function createComponent(
     return;
   }
 
+  // get config -----------------
+  const config = vscode.workspace.getConfiguration("ngFileGenerator");
+  const baseComponentPath = config.get<string>("baseComponentPath");
+  const baseComponentClassName = config.get<string>("baseComponentClassName");
+
   let imports = `
 import { Component, Injector, OnInit } from '@angular/core';
-import { AppBaseComponent } from '@app/app-base.component';
+import { ${baseComponentClassName} } from '${baseComponentPath}';
 `;
   if (standalone) {
     imports = `import { CommonModule } from '@angular/common'` + imports;
@@ -37,7 +42,7 @@ ${imports}
   standalone: ${standalone},
   ${standalone ? "imports: [CommonModule]," : ""}
 }) 
-export class ${componentName}Component extends AppBaseComponent implements OnInit {
+export class ${componentName}Component extends ${baseComponentClassName} implements OnInit {
   constructor(injector: Injector) {
     super(injector);
   }
