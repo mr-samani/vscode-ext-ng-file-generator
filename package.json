@@ -2,7 +2,7 @@
   "name": "ng-file-generator",
   "displayName": "ng-file-generator",
   "description": "generate module,component,service,pipe,... by extends base components",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "mr-samani",
   "engines": {
     "vscode": "^1.50.0"
@@ -13,6 +13,8 @@
   "icon": "images/icon.png",
   "categories": [
     "Other"
+  ],
+  "activationEvents":[
   ],
   "main": "./dist/extension.js",
   "contributes": {
