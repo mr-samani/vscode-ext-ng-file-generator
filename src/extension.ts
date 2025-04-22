@@ -5,6 +5,7 @@ import { createComponent } from "./commands/create-components";
 import { capitalize } from "./utils/string";
 import { createService } from "./commands/create-service";
 import { createModule } from "./commands/create-module";
+import { SamaniSettingsViewProvider } from "./views/setting-view.provider";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -62,6 +63,11 @@ export function activate(context: vscode.ExtensionContext) {
           createModule(uri.fsPath, moduleName, routingFile);
         }
       }
+    ),
+
+    vscode.window.registerWebviewViewProvider(
+      "samaniSettingsView",
+      new SamaniSettingsViewProvider(context)
     )
   );
 }

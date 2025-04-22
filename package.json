@@ -14,7 +14,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
@@ -68,8 +67,31 @@
           "type": "string",
           "default": "AppBaseComponent",
           "description": "Name of the base component class."
+        },
+        "samani.exampleSetting": {
+          "type": "boolean",
+          "default": false,
+          "description": "فعال‌سازی تنظیم نمونه"
         }
       }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "samaniGenerator",
+          "title": "Samani Generator",
+          "icon": "images/activitybar.svg"
+        }
+      ]
+    },
+    "views": {
+      "samaniGenerator": [
+        {
+          "id": "samaniSettingsView",
+          "name": "Settings",
+          "type": "webview"
+        }
+      ]
     }
   },
   "scripts": {

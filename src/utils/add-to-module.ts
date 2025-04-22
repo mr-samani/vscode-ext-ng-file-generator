@@ -21,7 +21,32 @@ export function addToNearestModule(
 
   while (dir !== path.parse(dir).root) {
     const files = fs.readdirSync(dir);
-    const moduleFile = files.find((f) => f.endsWith(".module.ts"));
+    const nonRoutingModules = files.filter(
+      (f) =>
+        f.toLowerCase().endsWith(".module.ts") &&
+        !f.toLowerCase().includes("routing.module.ts")
+    );
+    
+    let moduleFile: string | undefined;
+    
+    // 1. دنبال ماژولی که اسمش مثل پوشه باشه
+    const dirName = path.basename(dir).toLowerCase();
+    moduleFile = nonRoutingModules.find((f) =>
+      f.toLowerCase().startsWith(dirName)
+    );
+    
+    // 2. اگر نبود، دنبال app.module.ts بگرد
+    if (!moduleFile) {
+      moduleFile = nonRoutingModules.find((f) =>
+        f.toLowerCase() === "app.module.ts"
+      );
+    }
+    
+    // 3. اگر باز هم نبود، اولین ماژول غیر-routing رو بگیر
+    if (!moduleFile) {
+      moduleFile = nonRoutingModules[0];
+    }
+    
     if (moduleFile) {
       const modulePath = path.join(dir, moduleFile);
       let content = fs.readFileSync(modulePath, "utf8");
